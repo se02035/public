@@ -4,8 +4,7 @@ I love working with VS Code; it is such a great tool. One of the features I like
 
 Recently, I needed to work with private Azure resources (resources deployed in an Azure vnet with no public endpoints); things like creating files, running AZ CLI commands, etc. Azure Bastion enabled me to connect to a jump box (an Linux Azure VM) and work from there but I wasn't as productive as with VS Code. 
 
-Luckily, there is a way to use VS Code with Bastion. 
-
+Luckily, there is a way to use VS Code with Bastion allowing me to use my local dev tools to 
 ## Prerequisites
 
 - [Azure CLI]([How to install the Azure CLI | Microsoft Docs](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)) 
