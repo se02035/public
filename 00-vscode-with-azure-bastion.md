@@ -1,14 +1,20 @@
-# Use VS Code with Bastion (SSH tunnel)
+# Use VS Code to work resources in a Azure Virtual Network
 
-I love working with VS Code; it is such a great tool. One of the features I like most is to work with remote resources (machines, containers, etc) as my development environment. It makes working with local resources (e.g. files, etc) so easy. 
+I recently had to setup a [private Azure Kubernetes Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/private-clusters). One of the challenges when working with vnet-secured resources is, how to work with them effectively (e.g. to run `kubectl` commands). Some common options are:
 
-Recently, I needed to work with private Azure resources (resources deployed in an Azure vnet with no public endpoints); things like creating files, running AZ CLI commands, etc. Azure Bastion enabled me to connect to a jump box (an Linux Azure VM) and work from there but I wasn't as productive as with VS Code. 
+1. Use a VPN connection (e.g. point to site)
+1. Use a 'jump box' VM with Azure Bastion (deployed in the same vnet)
 
-Luckily, there is a way to use VS Code with Bastion allowing me to use my local dev tools to 
+Using a jump box with Azure Bastion is a great option (especially during development) as it is easy to setup and doesn't require any config change (VPN client) on my laptop (besides a RDP or SSH client). The most obivous option here is to RDP or SSH into the jump box VM (via Azure Bastion) and access the resources from there. That will work because the VM is on the same vnet. However, productivity might not be great and it is kind of difficult to effectively collaborate in a team.
+
+Luckily, you can also use your local VS Code editor and establish a remote connection with the jump box. Being able to use the VS Code on my local machine gives me a big productivity boost. With that setup, you can even use VS Code's 'Live Share' when working in teams.  
+
+Continue reading, if you want to know how to set this up.
+
 ## Prerequisites
 
-- [Azure CLI]([How to install the Azure CLI | Microsoft Docs](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)) 
-- VS Code with the [Remote - SSH extension]([Remote - SSH - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)) installed 
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- VS Code with the [Remote - SSH extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) installed 
 - Azure Bastion with a "*jump box*" Azure VM
 
 ## Setup
