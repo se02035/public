@@ -1,3 +1,3 @@
-# Shareable Artifacts
+## Shareable Artifacts
 
-1. [00-vscode-with-azure-bastion.md](./00-vscode-with-azure-bastion.md)
+1. [Use VS Code to work resources in a Azure Virtual Network](./00-vscode-with-azure-bastion.md)
