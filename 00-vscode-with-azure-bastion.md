@@ -1,4 +1,4 @@
-# Use VS Code to work resources in a Azure Virtual Network
+## Use VS Code to work resources in a Azure Virtual Network
 
 I recently had to setup a [private Azure Kubernetes Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/private-clusters). One of the challenges when working with vnet-secured resources is, how to work with them effectively (e.g. to run `kubectl` commands). Some common options are:
 
@@ -11,13 +11,13 @@ Luckily, you can also use your local VS Code editor and establish a remote conne
 
 Continue reading, if you want to know how to set this up.
 
-## Prerequisites
+### Prerequisites
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - VS Code with the [Remote - SSH extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) installed 
 - Azure Bastion with a "*jump box*" Azure VM
 
-## Setup
+### Setup
 
 1. Ensure the Azure Bastion instance has "Native Client Support" enabled (see <https://docs.microsoft.com/en-us/azure/bastion/connect-native-client-windows>)
 
@@ -43,7 +43,7 @@ Continue reading, if you want to know how to set this up.
 
 4. When prompted sign-in with your *Azure VM jump box* user password.
 
-## Troubleshooting
+### Troubleshooting
 
 - **Problem**: VS Code can't reconnect (e.g. if opening a folder, etc.); stays in an endless loop. 
   **Solution**: Restart the SSH tunnel and retry VS Code connection
