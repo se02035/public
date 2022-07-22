@@ -22,11 +22,8 @@ A workaround is to create a separate connection to the Snowflake data source usi
 Important details of the approach explained in this article
 
 - web user identities are stored in Azure Active Directory (AAD). AAD is the identity provider (IdP).
-
 - Relevant AAD identities (*UPN*) are mapped to Snowflake users (*login_name*). This means `UPN == login_name`
-
 - There is a 1:1 mapping between web users and Power BI Snowflake datasets.
-
 - Oauth2 credentials are used for Snowflake data source (to avoid storing sensitive credential information)
 
 ### Implementation details
@@ -98,7 +95,7 @@ In this step we acquire a valid oauth (access) token for the web user that can b
 
 #### 3. Create Snowflake security integration
 
-In order to map the identity of an oauth (access) token to a Snowflake identity, a Snowflake security entry (for external oauth) is required (for more information see [Snowflake Security Integration - External OAuth](https://docs.snowflake.com/en/sql-reference/sql/create-security-integration-oauth-external.html)). 
+In order to map the identity of an oauth (access) token to a Snowflake identity, a Snowflake security entry (for external oauth) is required (for more information see [Snowflake Security Integration - External OAuth](https://docs.snowflake.com/en/sql-reference/sql/create-security-integration-oauth-external.html)).
 
 **Detailed instructions:**
 
@@ -117,13 +114,11 @@ In order to map the identity of an oauth (access) token to a Snowflake identity,
         external_oauth_any_role_mode = 'ENABLE';
     ```
 
-    Relevant properties for this scenario: 
+    Relevant properties for this scenario:
 
     - `external_oauth_issuer`: The Azure AD used to issue the token.
     - `external_oauth_audience_list`: '*Whitelist*' the audience listed in the token (see `aud` claim)
-    - `external_oauth_token_user_mapping_claim` & ` external_oauth_snowflake_user_mapping_attribute`: Defines to use the Snowflake user (`login_name`) that maps to the token's `upn` claim
-
-
+    - `external_oauth_token_user_mapping_claim` & `external_oauth_snowflake_user_mapping_attribute`: Defines to use the Snowflake user (`login_name`) that maps to the token's `upn` claim
 
 #### 4. Programmatically update the Power BI data source credentials
 
@@ -179,4 +174,5 @@ private void UpdataDataSourceCredentials(PowerBIClient pbiClient, CredentialsBas
 
 ### Additional resources
 
-TODO
+- [Power BI embedded analytics documentation](https://docs.microsoft.com/en-us/power-bi/developer/embedded/)
+- [Connect to Snowflake in Power BI Service](https://docs.microsoft.com/en-us/power-bi/connect-data/service-connect-snowflake)
