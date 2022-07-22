@@ -1,4 +1,4 @@
-## Power BI Embedded (app-owns data): How to query Snowflake data sources using the actual web user identity.
+## Power BI Embedded (app-owns data): How to query Snowflake data sources (*DirectQuery* mode) using the actual web user identity.
 
 > *In order to follow this article the reader is expected to understand the basics of Power BI Embedded (PBIE). For anyone new to PBIE it is recommended to start with reading '[What is Power BI embedded analytics?](https://docs.microsoft.com/en-us/power-bi/developer/embedded/embedded-analytics-power-bi)'.*
 
@@ -6,18 +6,18 @@ Do you use Power BI Embedded (PBIE) in an "*Embed for your Customers*" (aka "*ap
 
 **Wait .... what is this all about. I need more context.**
 
-Using Power BI's Snowflake connector makes it easy to connect to Snowflake data stores and create reports on top of that data. The underlying data source connection supports uthentication using :
+Using Power BI's Snowflake connector makes it easy to connect to Snowflake data stores and create reports on top of that data. The underlying data source connection supports authentication using:
 
-- basic credentials (username password combination of a Snowflake user) 
-- identity provider (IdP) credentials (in combination with OAuth2.0) e.g. an Azure Active Directory (AAD) identity. Interesting to know: Snowflake also provides a guide on how to configure [Power BI SSO to Snowflake](https://docs.snowflake.com/en/user-guide/oauth-powerbi.html) . 
+- basic credentials (username password combination of a Snowflake user)
+- identity provider (IdP) credentials (in combination with OAuth2.0) e.g. an Azure Active Directory (AAD) identity. Interesting to know: Snowflake also provides a guide on how to configure [Power BI SSO to Snowflake](https://docs.snowflake.com/en/user-guide/oauth-powerbi.html).
 
-When using PBIE, does that mean the actual/effective user identity (matching Snowflake user identity) can be used to query Snowflake data? Well, yes and no. If the target PBIE scenario is "*Embed for your Organization*" (aka "*user-owns data*") then, yes, it is possible to transparently map the actual/effective web user identity to the matching Snowflake user identity. For PBIE "*app-owns data*" scenarios, however, the current Snowflake connector doesn't support this mechanism. 
+When using PBIE, does that mean the actual/effective user identity (matching Snowflake user identity) can be used to query Snowflake data? Well, yes and no. If the target PBIE scenario is "*Embed for your Organization*" (aka "*user-owns data*") then, yes, it is possible to transparently map the actual/effective web user identity to the matching Snowflake user identity. For PBIE "*app-owns data*" scenarios, however, the current Snowflake connector doesn't support this mechanism.
 
-Someone may ask "*Is it really relevant what user is used on the Snowflake side?. When using PBIE in an app-owns data scenario, it's the developer's responsibility to take care of user and access control management.*". While this is a fair assessment, it is sometimes required to run Snowflake operations in the context of the specific user. Some examples are: auditing, row level access policies that use `CURRENT_USER()` function, etc. 
+Someone may ask "*Is it really relevant what user is used on the Snowflake side?. When using PBIE in an app-owns data scenario, it's the developer's responsibility to take care of user and access control management.*". While this is a fair assessment, it is sometimes required to run Snowflake operations in the context of the specific user. Some examples are: auditing, row level access policies that use `CURRENT_USER()` function, etc.
 
-**Does that mean the actual user identity can't be used when working with Snowflake data sources?** 
+**Does that mean the actual user identity can't be used when working with Snowflake data sources?**
 
-A workaround is to create a separate connection to the Snowflake data source using the correct Snowflake user credentials. The idea is to create a copy (if PBI *DirectQuery* mode is used) of the Power BI Snowflake dataset and programmatically update the data source credentials. Below is a conceptual overview of this approach; the rest of this article explains key aspects on how to implement it.![](./docs/00-overview.png)
+A workaround is to create a separate connection to the Snowflake data source using the correct Snowflake user credentials. The idea is to create a copy (if PBI *DirectQuery* mode is used) of the Power BI Snowflake dataset and programmatically update the data source credentials. Below is a conceptual overview of this approach; the rest of this article explains key aspects on how to implement it.![Solution approach](./docs/00-overview.png)
 
 Important details of the approach explained in this article
 
@@ -28,8 +28,6 @@ Important details of the approach explained in this article
 - There is a 1:1 mapping between web users and Power BI Snowflake datasets.
 
 - Oauth2 credentials are used for Snowflake data source (to avoid storing sensitive credential information)
-
-  
 
 ### Implementation details
 
@@ -71,7 +69,7 @@ In this step we acquire a valid oauth (access) token for the web user that can b
 
    1. Create a new scope `session:scope:public`
 
-2. Verify & acquire access token.
+1. Verify & acquire access token.
 
    ```sh
    az login --tenant <AZUREAD_TENANT_ID> --allow-no-subscriptions --scope <AZUREAD_APP_ID>/session:scope:public 
@@ -97,7 +95,6 @@ In this step we acquire a valid oauth (access) token for the web user that can b
       "ver": "1.0"
     }
     ```
-
 
 #### 3. Create Snowflake security integration
 
@@ -133,7 +130,6 @@ In order to map the identity of an oauth (access) token to a Snowflake identity,
 The Snowflake data connector supports the following credential types:
 
 > *As mentioned in the beginning this article focuses on the oauth2 auth method.*
->
 
 1. Basic auth
 
@@ -180,8 +176,6 @@ private void UpdataDataSourceCredentials(PowerBIClient pbiClient, CredentialsBas
     });
 }
 ```
-
-
 
 ### Additional resources
 
