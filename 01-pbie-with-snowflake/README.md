@@ -11,17 +11,19 @@ Using Power BI's Snowflake connector makes it easy to connect to Snowflake data 
 - basic credentials (username password combination of a Snowflake user)
 - identity provider (IdP) credentials (in combination with OAuth2.0) e.g. an Azure Active Directory (AAD) identity. Interesting to know: Snowflake also provides a guide on how to configure [Power BI SSO to Snowflake](https://docs.snowflake.com/en/user-guide/oauth-powerbi.html).
 
-When using PBIE, does that mean the actual/effective user identity (matching Snowflake user identity) can be used to query Snowflake data? Well, yes and no. If the target PBIE scenario is "*Embed for your Organization*" (aka "*user-owns data*") then, yes, it is possible to transparently map the actual/effective web user identity to the matching Snowflake user identity. For PBIE "*app-owns data*" scenarios, however, the current Snowflake connector doesn't support this mechanism.
+When using PBIE, does that mean the actual/effective user identity (matching Snowflake user identity) can be used to query Snowflake data? Well, yes and no. If the target PBIE scenario is "*Embed for your Organization*" (aka "*user-owns data*") then, yes, it is possible to transparently map the actual/effective web user identity to the matching Snowflake user identity. For PBIE "*app-owns data*" scenarios, though, the current Snowflake connector doesn't support this.
 
 Someone may ask "*Is it really relevant what user is used on the Snowflake side?. When using PBIE in an app-owns data scenario, it's the developer's responsibility to take care of user and access control management.*". While this is a fair assessment, it is sometimes required to run Snowflake operations in the context of the specific user. Some examples are: auditing, row level access policies that use `CURRENT_USER()` function, etc.
 
-**Does that mean the actual user identity can't be used when working with Snowflake data sources?**
+**Does that mean the actual user identity can't be used when working with Snowflake data sources (in "*app-owns data*")?**
 
-A workaround is to create a separate connection to the Snowflake data source using the correct Snowflake user credentials. The idea is to create a copy (if PBI *DirectQuery* mode is used) of the Power BI Snowflake dataset and programmatically update the data source credentials. Below is a conceptual overview of this approach; the rest of this article explains key aspects on how to implement it.![Solution approach](./docs/00-overview.png)
+A workaround is to create a separate connection to the Snowflake data source using the correct Snowflake user credentials. The idea is to create a copy (if PBI *DirectQuery* mode is used) of the Power BI Snowflake dataset and programmatically update the data source credentials.
 
-Important details of the approach explained in this article
+Below is a conceptual overview of this approach; the rest of this article explains key aspects on how to implement it.![Solution approach](./docs/00-overview.png)
 
-- web user identities are stored in Azure Active Directory (AAD). AAD is the identity provider (IdP).
+Important details of the approach explained in this article:
+
+- Web user identities are stored in Azure Active Directory (AAD). AAD is the identity provider (IdP).
 - Relevant AAD identities (*UPN*) are mapped to Snowflake users (*login_name*). This means `UPN == login_name`
 - There is a 1:1 mapping between web users and Power BI Snowflake datasets.
 - Oauth2 credentials are used for Snowflake data source (to avoid storing sensitive credential information)
@@ -30,17 +32,17 @@ Important details of the approach explained in this article
 
 The details described in this section focus on the required steps to update the credentials (using an oauth token) for a Power BI Snowflake data source. This section doesn't cover additional topics e.g. how to programmatically create and/or copy Power BI artifacts such as workspaces or datasets, configure Snowflake row level access policies, etc.
 
-#### 1. Prepare Azure AD & Snowflake users
+#### 1. Prepare users
 
 As a first step we need to ensure that the users are correctly configured.
 
-Let's assume there is an Azure AD test user `john@contoso.onmicrosoft.com` , then you need to create a matching Snowflake user. Ensure the '*Login Name*' of this new user is `john@contoso.onmicrosoft.com` and it has role '*PUBLIC*' as the default role.
+Let's assume there is an Azure AD test user `john@contoso.onmicrosoft.com`. For this user a matching Snowflake user is needed. Ensure the '*Login Name*' of this new Snowflake user is `john@contoso.onmicrosoft.com` and it has role '*PUBLIC*' as the default role.
 
-> *It is important that the 'Login Name' is correctly matches the UPN of the Azure AD user. We use these fields to correctly map the users. Also ensure that this user has granted access to test data in Snowflake*
+> *It is important that the Snowflake's user 'Login Name' matches the 'UPN' of the Azure AD user; this is essential to map the users correctly. Also, ensure that this user has granted access to test data in Snowflake.*
 
 **Detailed instructions**:
 
-Run the statement below in Snowflake.
+To create a new Snowflake user *johncontoso*, run the following script in Snowflake:
 
 ```sql
 CREATE USER johncontoso
@@ -52,7 +54,7 @@ CREATE USER johncontoso
 
 In this step we acquire a valid oauth (access) token for the web user that can be used to access the Snowflake data source. In order to successfully update the Snowflake data source credentials, the used oauth token (access token) must meet the following criteria:
 
-1. The token's audience is '*whitelisted*' on Snowflake
+1. The token's audience is '*configured*' on Snowflake
 
 1. The token uses a valid Snowflake scope (format: `session:scope:<SNOWFLAKE_ROLE> e.g. session:scope:public`)
 
@@ -114,7 +116,7 @@ In order to map the identity of an oauth (access) token to a Snowflake identity,
         external_oauth_any_role_mode = 'ENABLE';
     ```
 
-    Relevant properties for this scenario:
+    Additional details:
 
     - `external_oauth_issuer`: The Azure AD used to issue the token.
     - `external_oauth_audience_list`: '*Whitelist*' the audience listed in the token (see `aud` claim)
@@ -122,7 +124,7 @@ In order to map the identity of an oauth (access) token to a Snowflake identity,
 
 #### 4. Programmatically update the Power BI data source credentials
 
-The Snowflake data connector supports the following credential types:
+The Snowflake data source credentials can be updated using these authentication types:
 
 > *As mentioned in the beginning this article focuses on the oauth2 auth method.*
 
@@ -140,7 +142,7 @@ The Snowflake data connector supports the following credential types:
 
 **Detailed instructions**:
 
-The  sample code below updates the data source credentials for the first data source of a specific dataset.
+The sample code below updates the data source credentials for the first data source of a specific dataset.
 
 > *CredentialsBase is the base class of the BasicCredentials and the OAuth2Credentials classes*
 >
