@@ -79,7 +79,7 @@ architecture-beta
 
 1. **Develop Locally**: Use a framework like the Google ADK to build your agent logic. Ensure the agent is A2A compliant.
 
-1. **Start the Tunnel**: E.g. if you use ngrok you can run `ngrok http 8080 --host-header="localhost:8080"`. You will receive a URL like *https://random-id.ngrok-free.dev*.
+1. **Start a (temporary) Tunnel**: E.g. if you use ngrok you can run `ngrok http 8080 --host-header="localhost:8080"`. You will receive a URL like *https://random-id.ngrok-free.dev*.
    > **Note**: *Rewriting the host header is critical for local development. Many web frameworks and network configurations rely on the Host header to route requests correctly; without this flag, the local server might reject the tunneled traffic.*
 
 1. **Register the A2A Agent (using the Agent Card)**: In the Gemini Enterprise Admin Panel, register a new *"Custom agent via A2A"*.
@@ -96,7 +96,7 @@ To be very crystal clear: the approached described in this document isn't a repl
 
 Beyond basic debugging, this setup enables advanced local scenarios:
 
-- **MCP Integration**: You can integrate your A2A agent with Model Context Protocol (MCP) servers running locally on the same machine via stdio. This is perfect for demoing agents that need to access local files, databases, or terminal environments without ever leaving your development workstation.
+- **MCP Integration**: You can integrate your A2A agent with Model Context Protocol (MCP) servers running locally on the same machine (also via `stdio`). This is perfect for demoing agents that need to access local files, databases, or terminal environments without ever leaving your development workstation.
 
 - **Rapid UI Testing**: Instantly see how Gemini Enterprise renders your agent's responses or tool results without waiting for CI/CD pipelines.
 
