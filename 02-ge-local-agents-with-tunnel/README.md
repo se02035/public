@@ -1,6 +1,15 @@
+<!--
+title: "Accelerate Gemini Enterprise Agent Development & Troubleshooting with Local Tunneling"
+author: "Oliver Lintner"
+date: 2026-02-16
+-->
+
 # Accelerate Gemini Enterprise Agent Development & Troubleshooting with Local Tunneling
 
-*It works on my machine, why doesn't it work when deployed?*, *Oh shoot, I forgot to add that trace statement for debugging ... ok, I guess I need to re-deploy a new version.*, *I quickly wanna demo/validate an agentic idea/custom tool with Gemini Enterprise ... do I really need to deploy everything first?* .... If you cam across any of these (or similar) questions then you should read this article!
+If you find yourself in the image below, then you may want to read this article.
+
+![local-development-issues](https://github.com/se02035/public/blob/main/02-ge-local-agents-with-tunnel/docs/00-intro.jpg)
+> *This image was generated with AI (model: gemini-3-pro-image-preview)*
  
 [Gemini Enterprise](https://cloud.google.com/gemini-enterprise) is a powerful platform that allows organizations to deploy and manage custom AI agents that can perform complex tasks, search proprietary data, and integrate with internal systems. This extensibility empowers developers and architects to create and register their own agents to tailor Gemini Enterprise to their unique operational workflows.
 
