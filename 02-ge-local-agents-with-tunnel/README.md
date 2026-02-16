@@ -55,7 +55,7 @@ Instead of deploying to a cloud environment, you run your agent locally on a por
 
 ```mermaid
 architecture-beta
-    group ext(logos:google-cloud)[External_Internet]
+    group ext(internet)[Google_Cloud]
     group lm(server)[Local]
 
     service ge(internet)[Gemini_Enterprise] in ext
@@ -100,6 +100,6 @@ Beyond basic debugging, this setup enables advanced local scenarios:
 
 - **Rapid UI Testing**: Instantly see how Gemini Enterprise renders your agent's responses or tool results without waiting for CI/CD pipelines.
 
-By moving the "cloud boundary" to your local terminal, you can focus on building intelligent agentic logic rather than fighting deployment infrastructure.
+By moving the "cloud boundary" to your local terminal, you can focus on building intelligent agentic logic rather than fighting deployment infrastructure. Of course, the approach shared in this article doesn't just apply on A2A agents with Gemini; it can also be very handy when developing/debugging Cloud Functions, working with web hooks, etc.
 
 *For sample implementation code and boilerplate for A2A agents, check out [this GitHub repository](https://github.com/se02035/google-ws-agent).*
