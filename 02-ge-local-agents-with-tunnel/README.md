@@ -55,7 +55,7 @@ Instead of deploying to a cloud environment, you run your agent locally on a por
 
 ```mermaid
 architecture-beta
-    group ext(internet)[External_Internet]
+    group ext(logos:google-cloud)[External_Internet]
     group lm(server)[Local]
 
     service ge(internet)[Gemini_Enterprise] in ext
