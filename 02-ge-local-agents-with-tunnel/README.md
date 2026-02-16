@@ -1,4 +1,4 @@
-# Accelerate Gemini Enterprise Agent Development with Local Tunneling
+# Accelerate Gemini Enterprise Agent Development & Troubleshooting with Local Tunneling
 
 [Gemini Enterprise](https://cloud.google.com/gemini-enterprise) is a powerful platform that allows organizations to deploy and manage custom AI agents that can perform complex tasks, search proprietary data, and integrate with internal systems. This extensibility empowers developers and architects to create and register their own agents to tailor Gemini to their unique operational workflows.
 
@@ -42,12 +42,12 @@ Instead of deploying to a cloud environment, you run your agent locally on a por
 
 ### Step-by-Step Workflow
 
-> **Important**: For this local tunneling setup to function, the agent must be configured as an A2A (Agent-to-Agent) agent. This ensures that Gemini Enterprise communicates via standardized web requests that can be forwarded through the tunnel.
+> **Important**: *For this local tunneling setup to function, the agent must be configured as an A2A (Agent-to-Agent) agent. This ensures that Gemini Enterprise communicates via standardized web requests that can be forwarded through the tunnel.*
 
 1. **Develop Locally**: Use a framework like the Google ADK to build your agent logic. Ensure it is initialized as an A2A-compliant service.
 
 1. **Start the Tunnel**: Run `ngrok http 8080 --host-header="localhost:8080"`. You will receive a URL like *https://random-id.ngrok-free.app*.
-   > Note: Rewriting the host header is critical for local development. Many web frameworks and network configurations rely on the Host header to route requests correctly; without this flag, the local server might reject the tunneled traffic.
+   > **Note**: *Rewriting the host header is critical for local development. Many web frameworks and network configurations rely on the Host header to route requests correctly; without this flag, the local server might reject the tunneled traffic.*
 
 1. **Register the A2A Agent (using the Agent Card)**: In the Gemini Enterprise Admin Panel, register a new *"Custom agent via A2A"*.
 
@@ -69,4 +69,4 @@ Beyond basic debugging, this setup enables advanced local scenarios:
 
 By moving the "cloud boundary" to your local terminal, you can focus on building intelligent agentic logic rather than fighting deployment infrastructure.
 
-* For sample implementation code and boilerplate for A2A agents, check out [this GitHub repository](https://github.com/se02035/google-ws-agent). *
+*For sample implementation code and boilerplate for A2A agents, check out [this GitHub repository](https://github.com/se02035/google-ws-agent).*
