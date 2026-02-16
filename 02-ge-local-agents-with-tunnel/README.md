@@ -100,6 +100,6 @@ Beyond basic debugging, this setup enables advanced local scenarios:
 
 - **Rapid UI Testing**: Instantly see how Gemini Enterprise renders your agent's responses or tool results without waiting for CI/CD pipelines.
 
-By moving the "cloud boundary" to your local terminal, you can focus on building intelligent agentic logic rather than fighting deployment infrastructure. Of course, the approach shared in this article doesn't just apply on A2A agents with Gemini; it can also be very handy when developing/debugging Cloud Functions, working with web hooks, etc.
+By moving the "cloud boundary" to your local terminal, you can focus on building intelligent agentic logic rather than fighting deployment infrastructure. 
 
 *For sample implementation code and boilerplate for A2A agents, check out [this GitHub repository](https://github.com/se02035/google-ws-agent).*
