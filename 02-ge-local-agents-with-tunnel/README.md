@@ -51,7 +51,27 @@ Since an A2A agent is essentially a Web API (e.g. built using [Google Agent Deve
 
 ### The Architecture
 
-Instead of deploying to a cloud environment, you run your agent locally on a port (e.g., 8080). By using a tunnel service tool (like ngrok), you create a temporary, secure public URL that forwards traffic to your local port.
+Instead of deploying to a cloud environment, you run your agent locally on a port (e.g., 8080). By using a tunnel service tool (like ngrok), you create a temporary, secure public URL that forwards traffic to your local port. Conceptually the setup will then look like this:
+
+```mermaid
+architecture-beta
+    group ext(internet)[External_Internet]
+    group lm(server)[Local]
+
+    service ge(internet)[Gemini_Enterprise] in ext
+    service ptnl(internet)[Tunnel_Service_Public] in ext
+    service lcl(server)[Dev_Env] in lm
+    service agent(internet)[A2A_Agent] in lm
+    service ltnl(internet)[Tunnel_Service_Local] in lm
+
+    ge:R -- L:ptnl
+    lcl:B -- T:agent
+    ltnl:R -- L:agent
+    ptnl:R -- L:ltnl
+```
+
+
+
 
 ### Step-by-Step Workflow
 
